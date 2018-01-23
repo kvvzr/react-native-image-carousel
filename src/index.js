@@ -428,31 +428,11 @@ class ImageCarousel extends React.Component<PropsType, StateType> {
       opacity: selectedImageHidden && selectedIdx === idx ? 0 : 1,
     });
 
+    const children = React.Children.map(this.props.children, (child, index) => React.cloneElement(child, { ref: (ref) => this.captureCarouselItem(ref, index), style: { ...child.props.style, ...getOpacity(index) } }));
+
     return (
       <View style={style}>
-        <ScrollView
-          horizontal={horizontal}
-          contentContainerStyle={contentContainerStyle}
-          scrollEnabled={!animating}
-          alwaysBounceHorizontal={false}
-          showsHorizontalScrollIndicator={false}
-        >
-          {this.getChildren().map((child, idx) => (
-            <TouchableWithoutFeedback
-              key={`slider-image-${idx}`} // eslint-disable-line react/no-array-index-key
-              onPress={() => this.open(idx)}
-            >
-              <View
-                ref={ref => {
-                  this.captureCarouselItem(ref, idx);
-                }}
-                style={getOpacity(idx)}
-              >
-                {child}
-              </View>
-            </TouchableWithoutFeedback>
-          ))}
-        </ScrollView>
+        {children}
         {fullscreen && this.renderFullscreen()}
       </View>
     );

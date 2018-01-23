@@ -386,10 +386,7 @@ var ImageCarousel = function (_React$Component) {
       var _this3 = this;
 
       var _props = this.props,
-          style = _props.style,
-          _props$horizontal = _props.horizontal,
-          horizontal = _props$horizontal === undefined ? true : _props$horizontal,
-          contentContainerStyle = _props.contentContainerStyle;
+          style = _props.style;
       var _state = this.state,
           fullscreen = _state.fullscreen,
           animating = _state.animating,
@@ -403,40 +400,16 @@ var ImageCarousel = function (_React$Component) {
         };
       };
 
+      var children = React.Children.map(this.props.children, function (child, index) {
+        return React.cloneElement(child, { ref: function ref(_ref3) {
+            return _this3.captureCarouselItem(_ref3, index);
+          }, style: Object.assign({}, child.props.style, getOpacity(index)) });
+      });
+
       return React.createElement(
         reactNative.View,
         { style: style },
-        React.createElement(
-          reactNative.ScrollView,
-          {
-            horizontal: horizontal,
-            contentContainerStyle: contentContainerStyle,
-            scrollEnabled: !animating,
-            alwaysBounceHorizontal: false,
-            showsHorizontalScrollIndicator: false
-          },
-          this.getChildren().map(function (child, idx) {
-            return React.createElement(
-              reactNative.TouchableWithoutFeedback,
-              {
-                key: 'slider-image-' + idx // eslint-disable-line react/no-array-index-key
-                , onPress: function onPress() {
-                  return _this3.open(idx);
-                }
-              },
-              React.createElement(
-                reactNative.View,
-                {
-                  ref: function ref(_ref3) {
-                    _this3.captureCarouselItem(_ref3, idx);
-                  },
-                  style: getOpacity(idx)
-                },
-                child
-              )
-            );
-          })
-        ),
+        children,
         fullscreen && this.renderFullscreen()
       );
     }
